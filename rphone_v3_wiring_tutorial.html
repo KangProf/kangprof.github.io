@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R-Phone V3 — Panduan Wiring</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0e1012;
+    --panel: #161a1e;
+    --panel2: #1c2230;
+    --border: #2a3040;
+    --accent: #00e5a0;
+    --accent2: #0099ff;
+    --warn: #ffb830;
+    --danger: #ff5252;
+    --muted: #4a5568;
+    --text: #c8d0dc;
+    --head: #e8edf5;
+    --tag-bg: #1a2230;
+    --step-w: 44px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    padding: 36px 24px 60px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  header {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 24px;
+    color: var(--head);
+    letter-spacing: 2px;
+    line-height: 1.3;
+  }
+  header p {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .header-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .badge.green { border-color: var(--accent); color: var(--accent); }
+  .badge.blue  { border-color: var(--accent2); color: var(--accent2); }
+  .badge.warn  { border-color: var(--warn); color: var(--warn); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .prog-item {
+    flex: 1;
+    min-width: 60px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .prog-item.active { background: var(--accent); }
+  .prog-item.done   { background: var(--accent2); opacity: 0.5; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── STEP CARD ── */
+  .step-card {
+    display: flex;
+    gap: 0;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .step-card:hover { border-color: #3a4560; }
+  .step-card.done-card { opacity: 0.55; }
+  .step-card.done-card .step-num { background: #1a2a1a; color: var(--accent); }
+
+  .step-num {
+    width: var(--step-w);
+    min-width: var(--step-w);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 14px 0 0;
+    background: var(--panel2);
+    border-right: 1px solid var(--border);
+    gap: 6px;
+  }
+  .step-num .num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .step-num .check {
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--muted);
+    user-select: none;
+    transition: color 0.15s;
+  }
+  .step-num .check:hover { color: var(--accent); }
+  .step-num .check.checked { color: var(--accent); }
+
+  .step-body {
+    flex: 1;
+    padding: 14px 16px;
+    background: var(--panel);
+  }
+
+  .step-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--head);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .step-title .module-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    color: var(--accent2);
+    letter-spacing: 1px;
+  }
+
+  /* ── WIRE ROWS ── */
+  .wire-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .wire-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid transparent;
+  }
+  .wire-row:hover { background: rgba(255,255,255,0.04); border-color: var(--border); }
+
+  .wire-from {
+    color: var(--accent2);
+    min-width: 130px;
+    white-space: nowrap;
+  }
+  .wire-arrow {
+    color: var(--muted);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .wire-to {
+    color: var(--text);
+    flex: 1;
+  }
+  .chip {
+    display: inline-block;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0px 5px;
+    font-size: 10px;
+    color: var(--accent);
+    margin-right: 3px;
+  }
+  .chip.esp { color: #ff7043; border-color: #3a2020; }
+  .chip.pwr { color: var(--warn); border-color: #3a3010; }
+  .chip.node { color: #cc88ff; border-color: #2a2040; }
+  .wire-empty { color: var(--muted); font-style: italic; }
+
+  /* ── NOTE BOX ── */
+  .note-box {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-left: 3px solid var(--warn);
+    background: rgba(255,184,48,0.06);
+    color: #d0a060;
+  }
+  .note-box.info {
+    border-color: var(--accent2);
+    background: rgba(0,153,255,0.06);
+    color: #80b8e0;
+  }
+
+  /* ── NODE DETAIL ── */
+  .node-detail {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(204,136,255,0.05);
+    border: 1px solid #2a2040;
+    border-radius: 4px;
+  }
+  .node-detail .nd-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: #cc88ff;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  /* ── JACK GRID ── */
+  .jack-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .jack-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .jack-card h3 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--head);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .jack-card p {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .dot-r { color: #ff5252; }
+  .dot-b { color: #888; }
+
+  /* ── SUMMARY ── */
+  .summary-bar {
+    display: flex;
+    gap: 20px;
+    margin-top: 36px;
+    padding: 16px 20px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    flex-wrap: wrap;
+  }
+  .sum-item { text-align: center; }
+  .sum-item .val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 22px;
+    color: var(--accent);
+    display: block;
+  }
+  .sum-item .lbl {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  footer {
+    margin-top: 48px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 600px) {
+    .wire-from { min-width: 100px; }
+    .jack-grid { grid-template-columns: 1fr; }
+    .header-meta { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">PANDUAN PEMASANGAN KABEL</div>
+  <h1>R-PHONE V3<br>WIRING TUTORIAL</h1>
+  <p>Ikuti langkah-langkah berikut secara urut. Setiap langkah mewakili satu modul komponen.<br>Klik ✓ untuk menandai langkah yang sudah selesai.</p>
+  <div class="header-meta">
+    <span class="badge green">FW v3.3.1 FINAL</span>
+    <span class="badge blue">ESP32</span>
+    <span class="badge blue">INA3221</span>
+    <span class="badge blue">ADS1115</span>
+    <span class="badge warn">12 LANGKAH</span>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-bar" id="progressBar">
+  <!-- generated by JS -->
+</div>
+
+<!-- ═══════════════════════════════════════
+     BAGIAN 1 — POWER SUPPLY
+════════════════════════════════════════ -->
+<div class="section-title">BAGIAN 1 — POWER SUPPLY</div>
+
+<!-- STEP 1 -->
+<div class="step-card" id="step-1">
+  <div class="step-num">
+    <span class="num">01</span>
+    <span class="check" onclick="toggleStep(1)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang XL4016 Step-Down
+      <span class="module-tag">XL4016</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">IN+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> 12V+</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">IN-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">OUT+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">INA3221</span> Vin2+</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">OUT-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">MOSFET</span> SOURCE</span>
+      </div>
+    </div>
+    <div class="note-box info">ℹ Set tegangan output XL4016 sesuai kebutuhan pengukuran sebelum disambung ke INA3221.</div>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step-card" id="step-2">
+  <div class="step-num">
+    <span class="num">02</span>
+    <span class="check" onclick="toggleStep(2)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang Mini 360 Step-Down (Power ESP32)
+      <span class="module-tag">MINI 360</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">IN+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> 12V+</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">IN-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">OUT+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> 5V</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">OUT-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> GND</span>
+      </div>
+    </div>
+    <div class="note-box">⚠ Set output Mini 360 ke 5V sebelum disambung ke ESP32. Jangan lebih dari 5.5V.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     BAGIAN 2 — SENSOR UTAMA
+════════════════════════════════════════ -->
+<div class="section-title">BAGIAN 2 — SENSOR UTAMA (I²C)</div>
+
+<!-- STEP 3 -->
+<div class="step-card" id="step-3">
+  <div class="step-num">
+    <span class="num">03</span>
+    <span class="check" onclick="toggleStep(3)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang INA3221 (Sensor Arus 3-Channel)
+      <span class="module-tag">INA3221</span>
+    </div>
+    <div class="note-box info">ℹ INA3221 menggunakan bus I²C yang sama dengan ADS1115 (G21/G22).</div>
+    <div class="wire-list" style="margin-top:10px">
+      <div class="wire-row">
+        <span class="wire-from">VCC</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> 3.3V</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">GND</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">SCL</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G22</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">SDA</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G21</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">Vin1+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">FC</span> VBUS Board</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">Vin1-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">FC</span> VBUS Konektor</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">Vin2+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">XL4016</span> OUT+</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">Vin2-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">RELAY OCP</span> COM</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">Vin3+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">RELAY PROBE</span> NC</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">Vin3-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-empty">— (kosong)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step-card" id="step-4">
+  <div class="step-num">
+    <span class="num">04</span>
+    <span class="check" onclick="toggleStep(4)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang ADS1115 (ADC 16-bit)
+      <span class="module-tag">ADS1115</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">VDD</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> 3.3V</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">GND</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">SCL</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G22</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">SDA</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G21</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">ADDR</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> GND <span style="color:var(--muted);font-size:11px">(I²C addr: 0x48)</span></span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">A0</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip node">NODE</span> Sambungan</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     BAGIAN 3 — MODUL FAST CHARGING
+════════════════════════════════════════ -->
+<div class="section-title">BAGIAN 3 — MODUL FAST CHARGING</div>
+
+<!-- STEP 5 -->
+<div class="step-card" id="step-5">
+  <div class="step-num">
+    <span class="num">05</span>
+    <span class="check" onclick="toggleStep(5)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang Modul Fast Charging
+      <span class="module-tag">FAST CHARGING</span>
+    </div>
+    <div class="note-box">⚠ JALUR VBUS HARUS DIPUTUS DARI BOARD terlebih dahulu sebelum disambung.</div>
+    <div class="wire-list" style="margin-top:10px">
+      <div class="wire-row">
+        <span class="wire-from">IN+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> 12V+</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">IN-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">VBUS Board</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">INA3221</span> Vin1+</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">VBUS Konektor</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">INA3221</span> Vin1-</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">GND</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">INA3221</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">DP</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">SENSOR DP</span> VCC</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">DM</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">SENSOR DM</span> VCC</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 6 -->
+<div class="step-card" id="step-6">
+  <div class="step-num">
+    <span class="num">06</span>
+    <span class="check" onclick="toggleStep(6)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang Modul Sensor Volt DP
+      <span class="module-tag">SENSOR DP</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">GND</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">FC</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">VCC</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">FC</span> Pin DP</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">I  (−)</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">S  (Signal)</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G34</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 7 -->
+<div class="step-card" id="step-7">
+  <div class="step-num">
+    <span class="num">07</span>
+    <span class="check" onclick="toggleStep(7)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang Modul Sensor Volt DM
+      <span class="module-tag">SENSOR DM</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">GND</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">FC</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">VCC</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">FC</span> Pin DM</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">I  (−)</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">S  (Signal)</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G35</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     BAGIAN 4 — RELAY & SWITCHING
+════════════════════════════════════════ -->
+<div class="section-title">BAGIAN 4 — RELAY & SWITCHING</div>
+
+<!-- STEP 8 -->
+<div class="step-card" id="step-8">
+  <div class="step-num">
+    <span class="num">08</span>
+    <span class="check" onclick="toggleStep(8)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang Modul Relay OCP
+      <span class="module-tag">RELAY OCP</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">DC+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> 12V+</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">DC-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">IN</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G26</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">NO</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-empty">— (kosong)</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">COM</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">INA3221</span> Vin2-</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">NC</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">JACK</span> OUTPUT PSU MERAH</span>
+      </div>
+    </div>
+    <div class="note-box info">ℹ Relay OCP berfungsi memutus arus saat over-current terdeteksi. COM → Vin2- INA3221 membentuk shunt jalur pengukuran.</div>
+  </div>
+</div>
+
+<!-- STEP 9 -->
+<div class="step-card" id="step-9">
+  <div class="step-num">
+    <span class="num">09</span>
+    <span class="check" onclick="toggleStep(9)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang Modul Relay Probe
+      <span class="module-tag">RELAY PROBE</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">DC+</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> 12V+</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">DC-</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip pwr">DC JACK</span> GND</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">IN</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G23</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">NO</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">ADS1115</span> A0</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">COM</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">JACK</span> PROBE MERAH</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">NC</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">INA3221</span> Vin3+</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 10 -->
+<div class="step-card" id="step-10">
+  <div class="step-num">
+    <span class="num">10</span>
+    <span class="check" onclick="toggleStep(10)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang MOSFET LR7843
+      <span class="module-tag">MOSFET</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">GATE</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G25</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">DRAIN</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">JACK</span> OUTPUT PSU HITAM</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">SOURCE</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip">XL4016</span> OUT-</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     BAGIAN 5 — OUTPUT & SIGNAL
+════════════════════════════════════════ -->
+<div class="section-title">BAGIAN 5 — OUTPUT & SIGNAL</div>
+
+<!-- STEP 11 -->
+<div class="step-card" id="step-11">
+  <div class="step-num">
+    <span class="num">11</span>
+    <span class="check" onclick="toggleStep(11)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Pasang Buzzer
+      <span class="module-tag">BUZZER</span>
+    </div>
+    <div class="wire-list">
+      <div class="wire-row">
+        <span class="wire-from">+  (VCC)</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> G27</span>
+      </div>
+      <div class="wire-row">
+        <span class="wire-from">−  (GND)</span>
+        <span class="wire-arrow">───►</span>
+        <span class="wire-to"><span class="chip esp">ESP32</span> GND</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 12 -->
+<div class="step-card" id="step-12">
+  <div class="step-num">
+    <span class="num">12</span>
+    <span class="check" onclick="toggleStep(12)">✓</span>
+  </div>
+  <div class="step-body">
+    <div class="step-title">
+      Buat NODE Sambungan Jalur
+      <span class="module-tag">NODE</span>
+    </div>
+    <div class="node-detail">
+      <div class="nd-title">▸ TITIK NODE = satu titik sambungan ke 4 jalur berikut:</div>
+      <div class="wire-list">
+        <div class="wire-row">
+          <span class="wire-from">NODE</span>
+          <span class="wire-arrow">───►</span>
+          <span class="wire-to"><span class="chip">ADS1115</span> A0</span>
+        </div>
+        <div class="wire-row">
+          <span class="wire-from">NODE</span>
+          <span class="wire-arrow">───►</span>
+          <span class="wire-to">R 470kΩ → <span class="chip esp">ESP32</span> GND</span>
+        </div>
+        <div class="wire-row">
+          <span class="wire-from">NODE</span>
+          <span class="wire-arrow">───►</span>
+          <span class="wire-to">R 10kΩ → Katoda 1N4148 → Anoda 1N4148 → <span class="chip esp">ESP32</span> G32</span>
+        </div>
+        <div class="wire-row">
+          <span class="wire-from">NODE</span>
+          <span class="wire-arrow">───►</span>
+          <span class="wire-to">C 100nF → <span class="chip esp">ESP32</span> GND</span>
+        </div>
+        <div class="wire-row">
+          <span class="wire-from">NODE</span>
+          <span class="wire-arrow">───►</span>
+          <span class="wire-empty">— (kosong)</span>
+        </div>
+      </div>
+    </div>
+    <div class="note-box info" style="margin-top:10px">ℹ R 470kΩ = voltage divider / pull-down. R 10kΩ + 1N4148 = clamping diode ke G32 untuk proteksi over-voltage. C 100nF = filter noise.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     JACK EKSTERNAL
+════════════════════════════════════════ -->
+<div class="section-title">JACK / KONEKTOR EKSTERNAL</div>
+<div class="jack-grid">
+  <div class="jack-card">
+    <h3><span class="dot-r">●</span> JACK OUTPUT PSU MERAH</h3>
+    <p>← NC Modul Relay OCP</p>
+  </div>
+  <div class="jack-card">
+    <h3><span class="dot-b">●</span> JACK OUTPUT PSU HITAM</h3>
+    <p>← DRAIN MOSFET LR7843</p>
+  </div>
+  <div class="jack-card">
+    <h3><span class="dot-r">●</span> JACK PROBE MERAH</h3>
+    <p>← COM Modul Relay Probe</p>
+  </div>
+  <div class="jack-card">
+    <h3><span class="dot-b">●</span> JACK PROBE HITAM</h3>
+    <p>← GND</p>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary-bar">
+  <div class="sum-item">
+    <span class="val" id="doneCount">0</span>
+    <span class="lbl">SELESAI</span>
+  </div>
+  <div class="sum-item">
+    <span class="val">12</span>
+    <span class="lbl">TOTAL LANGKAH</span>
+  </div>
+  <div class="sum-item">
+    <span class="val" id="pctCount">0%</span>
+    <span class="lbl">PROGRESS</span>
+  </div>
+  <div class="sum-item" style="margin-left:auto; text-align:right;">
+    <span class="val" style="font-size:14px; color:var(--muted);" id="statusMsg">Belum mulai</span>
+    <span class="lbl">STATUS</span>
+  </div>
+</div>
+
+<footer>R-PHONE V3 · WIRING TUTORIAL · <a href="https://kangprof.github.com">DOWNLOAD R-PHONE V3</a></footer>
+
+<script>
+  const TOTAL = 12;
+  const done = new Set();
+
+  function toggleStep(n) {
+    const card = document.getElementById('step-' + n);
+    const chk  = card.querySelector('.check');
+    if (done.has(n)) {
+      done.delete(n);
+      card.classList.remove('done-card');
+      chk.classList.remove('checked');
+    } else {
+      done.add(n);
+      card.classList.add('done-card');
+      chk.classList.add('checked');
+    }
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const d = done.size;
+    const pct = Math.round(d / TOTAL * 100);
+    document.getElementById('doneCount').textContent = d;
+    document.getElementById('pctCount').textContent  = pct + '%';
+
+    const msgs = ['Belum mulai','Sedang berjalan...','Hampir selesai!','✓ Semua selesai!'];
+    const idx = d === 0 ? 0 : d === TOTAL ? 3 : pct >= 70 ? 2 : 1;
+    document.getElementById('statusMsg').textContent = msgs[idx];
+
+    // update progress bar
+    const bar = document.getElementById('progressBar');
+    bar.innerHTML = '';
+    for (let i = 1; i <= TOTAL; i++) {
+      const el = document.createElement('div');
+      el.className = 'prog-item' + (done.has(i) ? ' done' : (i === [...Array(TOTAL+1).keys()].slice(1).find(x => !done.has(x)) ? ' active' : ''));
+      el.title = 'Langkah ' + i;
+      el.onclick = () => toggleStep(i);
+      bar.appendChild(el);
+    }
+  }
+
+  // init progress bar
+  updateProgress();
+</script>
+</body>
+</html>
